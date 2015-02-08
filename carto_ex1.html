@@ -1,0 +1,253 @@
+
+<html>
+<head>
+	<title>Timoco Carto App examples </title>
+
+	<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.11/themes/css/cartodb.css" />
+	<!-- include cartodb.js library -->
+	<script src="http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js"></script>
+	<style>
+    	html, body {width:100%; height:100%; padding: 0; margin: 0;}
+    	#map { width: 95%; height:80%; background: black;}
+  	</style>
+	
+
+	<script type="text/javascript">
+    	/*Don't need existing basemap or Leaflter ly*/	
+      function cdb_createvis() {
+      	var viz_json_url = 'http://timoco.cartodb.com/api/v2/viz/88f0c25e-9fa3-11e4-9ab7-0e0c41326911/viz.json'
+        cartodb.createVis('map', viz_json_url, {
+            shareable: true,
+            title: true,
+            description: true,
+            search: true,
+            tiles_loader: true,
+            center_lat: 39,
+            center_lon: -97,
+            zoom: 4
+        })
+        .done(function(vis, layers) {
+          // layer 0 is the base layer, layer 1 is cartodb layer
+          // setInteraction is disabled by default
+          layers[1].setInteraction(true);
+          layers[1].on('featureOver', function(e, pos, latlng, data) {
+            cartodb.log.log(e, pos, latlng, data);
+          });
+          // you can get the native map to work with it
+          var map = vis.getNativeMap();
+          console.log(map);
+          // now, perform any operations you need
+          // map.setZoom(3);
+          // map.panTo([50.5, 30.5]);
+        })
+        .error(function(err) {
+          console.log(err);
+        });
+
+        console.log('map object::');
+      	console.log(map)
+      };
+
+      /*Need a basemap or other map layer*/
+      function cdb_createLyr(){
+      	var viz_json_url = 'http://timoco.cartodb.com/api/v2/viz/88f0c25e-9fa3-11e4-9ab7-0e0c41326911/viz.json';
+      	var map = new L.Map('map', {
+    		center: [39,-97],
+    		zoom: 4,
+    		zoomControl: false
+  		});
+
+      	//Need a basemap
+      	 L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+              {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="http://cartodb.com/attributions">CartoDB</a>'
+        }).addTo(map);
+
+      	cartodb.createLayer(map, viz_json_url)
+          .addTo(map)
+          .done(function(layer) {
+          	console.log("CartoDB.Layer Object ::");
+          	console.log(layer);
+              // layer.createSubLayer({
+              //   sql: "SELECT num_establishments FROM economic_pharma_health_retail_10yr_by_state where year=2002 ",
+              //   cartocss: '#economic_pharma_health_retail_10yr_by_state {marker-fill: #F0F0F0;}'
+              // });
+
+              // layer.getSubLayer(0).setSQL("SELECT * FROM economic_pharma_health_retail_10yr_by_state");
+              
+              layer.setInteraction(true);
+                  layer.on('featureOver', function(e, pos, latlng, data) {
+                    cartodb.log.log(e, pos, latlng, data);
+                  });
+                  layer.on('error', function(err) {
+                    cartodb.log.log('error: ' + err);
+                  });
+                })
+            .error(function(err) {
+            	alert("some error occurred: " + err);
+          	});
+
+			 // //#Add CartoDB Lyr to leaflet map
+		    //     cartodb.createLayer(map, viz_json_url)
+		    //       .addTo(map)
+		    //       .on('done', function(layer) {
+		    //           // layer.createSubLayer({
+		    //           //   sql: "SELECT num_establishments FROM economic_pharma_health_retail_10yr_by_state where year=2002 ",
+		    //           //   cartocss: '#economic_pharma_health_retail_10yr_by_state {marker-fill: #F0F0F0;}'
+		    //           // });
+
+		    //           // layer.getSubLayer(0).setSQL("SELECT * FROM economic_pharma_health_retail_10yr_by_state");
+		              
+		    //           layer.setInteraction(true);
+		    //           layer.on('featureOver', function(e, pos, latlng, data) {
+		    //           	cartodb.log.log(e, pos, latlng, data);
+		    //           });
+		    //           layer.on('error', function(err) {
+		    //             cartodb.log.log('error: ' + err);
+		    //           });
+
+		    //           console.log('layer object::');
+			   //    	  console.log(layer)
+		    //         })
+		    //         .on('error', function(err) {
+		    //         	alert("some error occurred: " + err);
+		    //         	console.log("ERROR!!")
+		    //       	});
+
+ 		console.log('map object::');
+      	console.log(map)
+      
+      }; // cdb_createLyr
+
+      /*Create Viz at Runtime w/o viz.json from CartoDB Editor
+      https://github.com/CartoDB/cartodb.js/blob/develop/doc/API.md
+      */
+      function cdb_createRuntimeViz(){
+      	var map = new L.Map('map', {
+    		center: [39,-97],
+    		zoom: 4,
+    		zoomControl: false
+  		});
+
+      	//Need a basemap
+      	 L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+              {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="http://cartodb.com/attributions">CartoDB</a>'
+        }).addTo(map);
+
+      	var stateList = "('OH','FL','IL')";
+    	cartodb.createLayer(map, {
+		  user_name: 'timoco',
+		  type: 'cartodb',
+		  sublayers: [{
+		    //sql: "SELECT * FROM ne_50m_admin_1_states",
+		    sql:"SELECT * FROM economic_pharma_health_retail_10yr_by_state WHERE postal in "+ stateList,//('MA','NY','CA')",
+		    cartocss: '#layer {polygon-fill: #66FF66;}'
+		  }]
+		})
+		.addTo(map) // add the layer to our map which already contains 1 sublayer
+		.done(function(layer) {
+			var dynLyr;
+			setTimeout(function() {
+            	//Create CartoDBLayer from query
+            	// var spatQry = "SELECT * FROM economic_pharma_health_retail_10yr_by_state WHERE nacis_category='Retail trade' AND year in ('2002')";
+            	dynLyr = layer.createSubLayer({
+              		sql: "SELECT * FROM economic_pharma_health_retail_10yr_by_state WHERE postal in ('MA','NY','CA')",
+              		cartocss: '#economic_pharma_health_retail_10yr_by_state { polygon-fill: #7AA3CC;}',
+              		interactivity: 'postal'
+            		});	
+            	// print on the console the place name on hover
+            	dynLyr.on('featureOver', function(e, pos, pixel, data) {
+              		console.log(data.name);
+            	});
+            	dynLyr.setInteraction(true);	
+            	console.log(dynLyr);
+          	}, 3000);	//will only appear milliseconds
+			
+			//show diff states USA
+       		setTimeout(function() {
+            	dynLyr.setSQL("SELECT * FROM economic_pharma_health_retail_10yr_by_state WHERE postal in ('MA','NY','CA')")
+            	}, 6000);
+
+       		// Change the css of the dynLyr
+	        setTimeout(function() {
+	            dynLyr.setCartoCSS('#economic_pharma_health_retail_10yr_by_state { polygon-fill: #FF4719;}' );
+	          }, 8000);
+	         
+	         // remove the countries layer
+	          setTimeout(function() {
+	            layer.getSubLayer(0).remove();
+	          }, 10000);
+			
+			$('#content').text("finished")
+		  
+		 //  // create and add a new sublayer
+		 //  layer.createSubLayer({
+		 //    sql: "SELECT * FROM ne_50m_admin_1_states LIMIT 200",
+		 //    cartocss: '#ne_50m_admin_1_states {marker-fill: #7AA3CC;}'
+		 //  });
+
+		 //  //change the query for the first layer
+		 // layer.getSubLayer(0).setSQL("SELECT * FROM ne_50m_admin_1_states LIMIT 10");
+		
+		});
+
+
+      	// cartodb.createLayer(map, {
+       //    user_name: 'examples',
+       //    type: 'cartodb',
+       //    sublayers: [{
+       //       sql: 'select * from country_boundaries',
+       //       cartocss: '#layer { polygon-fill: #F00; polygon-opacity: 0.3; line-color: #F00; }'
+       //    }]
+       //  })
+       //  .addTo(map)
+       //  .done(function(layer) {
+       //    var population;
+       //    // wait a little bit and add the most populated places	
+       //    setTimeout(function() {
+       //      population = layer.createSubLayer({
+       //        sql: 'select * from ne_10m_populated_p_2',
+       //        cartocss: '#layer { marker-fill: black; line-color: #333; marker-width: 3 }',
+       //        interactivity: 'name'
+       //      });
+       //      // print on the console the place name on hover
+       //      population.on('featureOver', function(e, pos, pixel, data) {
+       //        console.log(data.name);
+       //      });
+       //      population.setInteraction(true);
+       //    }, 3000);
+       //    // show population only in USA
+       //    setTimeout(function() {
+       //      population.setSQL("select * from ne_10m_populated_p_2 where adm0name = 'United States of America'")
+       //    }, 6000);
+       //    // bigger points in USA
+       //    setTimeout(function() {
+       //      population.setCartoCSS( '#layer { marker-fill: black; line-color: #333; marker-width: 10; marker-opacity: 0.6; }' );
+       //    }, 8000);
+       //    // remove the countries layer
+       //    setTimeout(function() {
+       //      layer.getSubLayer(0).remove();
+       //    }, 10000);
+       //  });
+
+  
+
+      }; //cdb_createRuntimeViz
+
+      //window.onload=cdb_createLyr;
+      window.onload=cdb_createRuntimeViz;
+
+
+     
+          
+    </script>
+</head>
+<body>
+	<div id="map"></div>
+
+	<div id="content"></div>
+	
+
+    
+	
+</body>
+</html>
