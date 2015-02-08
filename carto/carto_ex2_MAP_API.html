@@ -1,0 +1,249 @@
+
+<html>
+<head>
+	<title>Timoco Carto App examples </title>
+
+	<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.11/themes/css/cartodb.css" />
+	<!-- include cartodb.js library -->
+	<script src="http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js"></script>
+	<style>
+    	html, body {width:100%; height:100%; padding: 0; margin: 0;}
+    	#map { width: 95%; height:80%; background: black;}
+  	</style>
+	
+
+	<script type="text/javascript">
+  $(document).ready(function() { 
+    
+    var retail_health_viz_url = 'http://timoco.cartodb.com/api/v2/viz/88f0c25e-9fa3-11e4-9ab7-0e0c41326911/viz.json';
+    var retail_health_tbl = 'economic_pharma_health_retail_10yr_by_state';
+    var county_tbl = 'county_usa';
+    var user_name = 'timoco';
+    var api_key = '2d80f8152e590c2f8d7da82f92f397ffa697bab8';
+    var map;
+
+
+  initMap();
+
+  function initMap() {  
+    console.log('Initialize Leaflet Map');
+    map = new L.Map('map', {
+      zoomControl: false,
+      center: [39, -97],
+      zoom: 4 
+    });
+
+    console.log('Add the DarkMatter base map from cartodb cdn');
+    //#CartoDB DarkMatter basemap from cdn
+    L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+          {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="http://cartodb.com/attributions">CartoDB</a>'
+    }).addTo(map);    
+
+    // // set up the base map
+    // var greyAndBlack = new L.tileLayer('http://{s}.api.cartocdn.com/base-dark/{z}/{x}/{y}.png', {
+    //         attribution: 'CartoDB',
+    //         maxZoom: 10,
+    //       }).addTo(map);
+    
+    //pull in county tiles from CartoDB
+    console.log("Use CartoDB Maps API to retrieve tiles");
+    // var countyUrl='https://timoco.cartodb.com/api/v1/map/timoco@2232ab47@cc1fffb69d7923b817650d4be3b8cdcf:1423008667663.84/{z}/{x}/{y}.png'
+    //timoco@2232ab47@cc1fffb69d7923b817650d4be3b8cdcf:1423008667663.84
+    // var countyUrl = 'http://' + user_name + '.cartodb.com/tiles/'+county_tbl+'/{z}/{x}/{y}.png';
+    // var countyAttribs = 'Natural Earth';
+    // var countyFields = new L.TileLayer(countyUrl, {maxZoom: 8, attribution: countyAttribs});
+    
+    //    console.log(countyUrl);
+    //curl 'https://{account}.cartodb.com/api/v1/map/named?api_key=APIKEY' -H 'Content-Type: application/json' -d @mapconfig.json
+
+
+    //map.addLayer(countyFields);  
+
+    cdbMapAPI();
+    //add cartodb layer with one sublayer
+    // cartodb.createLayer(map, {
+    //     user_name: 'timoco',
+    //     type: 'namedmap',
+    //     named_map: {
+    //       name: "namedmap_tutorial",
+    //       layers: [{
+    //         layer_name: "t",
+    //         interactivity: "cartodb_id, name, pop_max"
+    //       }]
+    //     }
+    //   })
+    //   .addTo(map)
+    //   .done(function(layer) {
+        
+    //     layer.getSubLayer(0).setInteraction(true);
+
+    //     // on mouseover
+    //     layer.getSubLayer(0).on('featureOver', function(e, pos, pixel, data) {
+    //       // print data to console log
+    //       console.log("Event #" + data.cartodb_id + ", name " + data.name + ", max population: " + data.pop_max);
+    //     });
+ 
+    //     // show infowindows on click
+    //     cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['cartodb_id','name', 'pop_max']);
+    //   });
+   }
+
+
+   function cdbMapAPI(){
+    console.log(arguments.callee.name);
+    
+   var mapconfig = {
+      "version": "0.0.1",
+      "name": "county_ex2",
+      "auth": {
+        "method": "open"
+      },
+      "layergroup": {
+          "layers": [{
+            "type": "cartodb",
+            "options": {
+              "cartocss_version": "2.1.1",
+              "cartocss": "#layer { polygon-fill: ##99FF33; }",
+              "sql": "select * from county_usa"
+            }
+          }]
+        }
+    };
+    console.log(mapconfig);
+    // var mapconfig = {
+    //       "version": "1.0.1",
+    //       "layers": [{
+    //         "type": "cartodb",
+    //         "options": {
+    //           "cartocss_version": "2.1.1",
+    //           "cartocss": "#layer { polygon-fill: #8DAAC6; }",
+    //           "sql": "select * from county_usa"
+    //         }
+    //       }]
+    //     }
+    // $.getJSON(, function(data) {
+
+    // })
+    // $.getJSON('http://timoco.cartodb.com/api/v1/map/named/timoco@test',mapconfig,
+    //       function(jsonData) {
+    //          alert(jsonData);
+    //           }
+    //   );
+
+    // $.ajax({
+    //     type: 'POST',
+    //     url: '/Services/GetPatient',
+    //     data: { 'patientID' : 1 },
+    //     dataType: 'json',
+    //     success: function(jsonData) {
+    //       alert(jsonData);
+    //     },
+    //     error: function() {
+    //       alert('Error loading PatientID=' + id);
+    //     }
+    //   });
+
+//url: 'http://timoco.cartodb.com/api/v1/map',        
+//url: 'https://timoco.cartodb.com/api/v1/map/named?api_key=2d80f8152e590c2f8d7da82f92f397ffa697bab8'
+// var countyUrl=    'https://timoco.cartodb.com/api/v1/map/timoco@2232ab47@cc1fffb69d7923b817650d4be3b8cdcf:1423008667663.84/{z}/{x}/{y}.png'
+
+    // $.ajax({
+    //   crossOrigin: true,
+    //   type: 'POST',
+    //   dataType: 'json',
+    //   contentType: 'application/json',
+    //   url: 'http://timoco.cartodb.com/api/v1/map/named/timoco@county_ex',
+    //   data: JSON.stringify(mapconfig),
+    //   success: function(data) {
+    //     // console.log(data);
+    //     var templateUrl = 'https://timoco.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png';
+    //     map.addLayer(new L.TileLayer(templateUrl, {maxZoom: 8}));
+    //     // var namedLyr = new L.TileLayer(templateUrl, {maxZoom: 8});
+    //     // namedLyr.addTo(map);
+    //     console.log(templateUrl);
+    //   },
+    //   error: function(data) {
+    //     console.log('Error loading data::');
+    //     console.log(data);
+    //  }
+    // })
+
+ 
+
+    cartodb.createLayer(map, {
+      user_name: 'timoco',
+      type: 'namedmap',
+      named_map: {
+        name: "county_ex",
+        layers: [{
+          layer_name: "t",
+          interactivity: "cartodb_id, name, pop"
+         }]
+       }
+      })
+      //map.addLayer(cdbNamedMapLyr);
+      .addTo(map) // add the layer to our map which already contains 1 sublayer  
+      .done(function(layer) {
+        console.log(layer);
+        // create and add a new sublayer
+       //  var dynLyr = layer.createSubLayer({
+       //   sql: "SELECT * FROM county_usa WHERE state in ('MA','NY','CA')",
+       //   cartocss: '#county_usa { polygon-fill: #7AA3CC;}',
+       //   interactivity: 'cartodb_id'
+       // }); 
+        //dynLyr.setInteraction(true);  
+//      layer.setInteraction(true);
+        // dynLyr.on('featureOver', function(e, pos, latlng, data) {
+        //     console.log("test");
+        //      cartodb.log.log(e, pos, latlng, data);
+        // });
+        
+        // layer.createSubLayer({
+        //   sql: "SELECT num_establishments FROM economic_pharma_health_retail_10yr_by_state where year=2002 ",
+        //   cartocss: '#economic_pharma_health_retail_10yr_by_state {marker-fill: #F0F0F0;}'
+        // });    
+
+        // change the query for the first layer
+        // layer.getSubLayer(0).setSQL("SELECT * FROM economic_pharma_health_retail_10yr_by_state");
+      }); // promise .done      
+
+
+
+
+      // .addTo(map)
+      // .done(function(layer) {
+      //   var cdbNamedMapLyr=layer.getSubLayer(0);
+      //   console.log(cdbNamedMapLyr);
+      //   cdbNamedMapLyr.setInteraction(true);
+      //   cdbNamedMapLyr.setSQL
+      //   // on mouseover
+      //   cdbNamedMapLyr.on('featureOver', function(e, pos, pixel, data) {
+      //     // print data to console log
+      //     console.log("Event #" + data.cartodb_id + ", name " + data.name + ", max population: " + data.pop);
+      //   });
+ 
+      //   // show infowindows on click
+      //   cdb.vis.Vis.addInfowindow(map, cdbNamedMapLyr, ['cartodb_id','name', 'pop']);
+      // })
+      // .error(function(data) {
+      //   console.log('Error loading data::');
+      //   console.log(data);
+      // });
+  
+  }
+ 
+  });
+//window.onload=cdb_createRuntimeViz;
+</script>
+
+</head>
+<body>
+	<div id="map"></div>
+
+	<div id="content"></div>
+	
+
+    
+	
+</body>
+</html>
