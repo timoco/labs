@@ -5,7 +5,6 @@ Timoco.js for CartoDB Leaflet app
 ##Abstract out after prototype
 */
 
-var ne_states_viz_url     = 'http://timoco.cartodb.com/api/v2/viz/0cef06f6-a05d-11e4-a076-0e0c41326911/viz.json';
 var retail_health_viz_url = 'http://timoco.cartodb.com/api/v2/viz/88f0c25e-9fa3-11e4-9ab7-0e0c41326911/viz.json';
 var retail_health_tbl = 'economic_pharma_health_retail_10yr_by_state';
 var user_name = 'timoco';
@@ -15,6 +14,8 @@ var map;
 
 function init() {
   console.log('Initialize Leaflet Map');
+  $('#proc_con').text('Initialize Leaflet Map');  
+    
   map = new L.Map('map', {
       zoomControl: false,
       center: [39, -97],
@@ -29,14 +30,12 @@ function init() {
   }).addTo(map);
   
   //##Timoco.js
-  console.log('Add viz from timoco');
-  
-
+  console.log('Add viz from timoco via viz.json url');
   //#Add CartoDB Lyr to leaflet map
   cartodb.createLayer(map, viz_json_url)
     .addTo(map)
     .done(function(layer) {
-        //Build data filter layers
+        //Build data filter layers for metrics & dimensions
         buildDataFilters();
         // layer.setInteraction(true);
         // layer.on('featureOver', function(e, pos, latlng, data) {
@@ -91,19 +90,18 @@ function init() {
 */ 
 function buildDataFilters(){
   console.log("Building the Data Filters");
+  console.log("Use SQL API to build drop down list of metrics to update map")
   var cdb_tbl_struct_qry='SELECT * from '+retail_health_tbl +' LIMIT 1';
   var cbd_sql_api_struct='http://'+user_name+'.cartodb.com/api/v2/sql?q='+cdb_tbl_struct_qry+'&api_key='+api_key;
   var metric_list = $("<select id='metric' />");
 
   $.getJSON(cbd_sql_api_struct, function(data) {
       var fields = data.fields;
-      //console.log(fields);//$('#tbl_results').append('<br />'+data.total_rows+'<br />'); 
       $.each(fields, function(key, val) { 
           if (val.type == 'number'){               //only allow numberic metrics #raw
             if (key === 'num_establishments'){    //default to number establishments
               $('<option />', {value: key, text: key, selected: 'selected'}).appendTo(metric_list);
             } else { 
-        //      console.log(val);
               $('<option />', {value: key, text: key}).appendTo(metric_list);
             } 
           }
@@ -112,14 +110,14 @@ function buildDataFilters(){
     })
 
   var data_filters = ['nacis_category','year'];
+
+  console.log("Use cartodb.SQL to build drop down filter list of data dimensions to update map")
   var sql = new cartodb.SQL({user: 'timoco'});
 
   $.each(data_filters, function(key,filter){
-    //console.log(filter);
       var filter_list = $("<select id='"+filter+"' />");
       sql.execute("SELECT distinct " + filter + " FROM "+ retail_health_tbl)//" WHERE id > {{id}}", { id: 3 })
       .done(function(data) {
-        //console.log(data.fields);
         $.each(data.rows, function(key, val) {  
           $.each(val, function (k,v){
             
@@ -128,12 +126,10 @@ function buildDataFilters(){
         });
       })
       .error(function(errors) {
-        // errors contains a list of errors
+      // errors contains a list of errors
         console.log("errors:" + errors);
     })  
-
     filter_list.appendTo('#data_filters');
-
   })
 }
 
@@ -207,11 +203,11 @@ function updateCDBMap(){
 
   //sql statements make dynamic input or time
     //#Get Measures per state
-    /*SELECT cartodb_id, state_name, year, nacis_category, num_establishments, 
-      revenue_1k, num_paid_employees  
-      FROM economic_pharma_health_retail_10yr_by_state 
-      WHERE nacis_category='Retail trade' AND year in ('2002')
-      ORDER BY state_name ASC*/
+    // SELECT cartodb_id, state_name, year, nacis_category, num_establishments, 
+    //   revenue_1k, num_paid_employees  
+    //   FROM economic_pharma_health_retail_10yr_by_state 
+    //   WHERE nacis_category='Retail trade' AND year in ('2002')
+    //   ORDER BY state_name ASC
 
   //sql.execute("SELECT * FROM economic_pharma_health_retail_10yr_by_state WHERE nacis_category='Retail trade' AND year in ('2002')")
   //#sql.execute method
@@ -223,18 +219,18 @@ function updateCDBMap(){
       var tbl_dataArray  = data.rows;
       var viz_results = "";
       viz_results+="Total Number of Rows :: " + data.total_rows + "</br>";
-      
+
       for(row in tbl_dataArray) {
         var infoJson = tbl_dataArray[row];
         console.log(infoJson);
         console.log(row);
-        // viz_results+="<br />--<br />";
         viz_results+="Data Cube  :: " + infoJson.postal+ " :: "+infoJson.year+" :: "+infoJson.nacis_category+"  :: <br/> " ;
       }
-      document.getElementById('tbl_results').innerHTML = viz_results;
+      $('#tbl_results').append(viz_results);
       
       console.log('Creating CartoDBLayer from data');
-      var cartodb_lyr = cartodb.createLayer(map, data);
+      console.log(infoJson);
+      var cartodb_lyr = cartodb.createLayer(map, infoJson);
       console.log('Adding CartoDBLayer to Map');
       cartodb_lyr.addTo(map);
     })
@@ -357,15 +353,11 @@ function loadCDBNamedMap(){
     update_args["step_rt"] = 5000;
     update_args["step"]=k;
     console.log(update_args);
-    //updateMap(update_args);//.delay(3000);
-  
-    // setTimeout(function() {console.log('sleeping for 5 secs before next .each?');}, 5000);
     setTimeout(function() {updateMap(update_args);
-                          $("#proc_results").html('Displaying '+update_args.metric+' for '+update_args.time+' '+update_args.analytic);}, 
+                          $("#proc_results").text('Displaying '+update_args.metric+' for '+update_args.time+' '+update_args.analytic);}, 
                           update_args.step_rt*(k)); 
                           
-//    setTimeout(function() {$("#"+value).addClass('active');}, 3000*i);
-  });
+    });
 }
 /*
 *
@@ -403,26 +395,17 @@ function updateMap(parms){
   console.log(cdbSqlUrl);
 
   //update the display
-  $('#tbl_results').text('RETURN VALUES');
+  $('#tbl_results').append("<p>Data Table</p>");
+  $('#tbl_results').append("Update Map for "+ analytic_dim + " : "+metric+" by Year = "+ time_dim);
   var dataLyr;
-  // $(selector).getJSON(url,data,success(data,status,xhr))
   
   //Wrap API call in var for promise
-  // var hipsterJesus = {
-  //         html: function() {
-  //               return $.getJSON('http://hipsterjesus.com/api/').then(function(data) {return data.text;});  
-  //         }
-  // };
-  // hipsterJesus.html().done(function(html) {$("tbl_results").append(html);}); 
-  // console.log(hipsterJesus);
-
   var cartodb_sql_api_req = {
       cdb_data_resp: function(){ return $.getJSON(cdbSqlUrl).then(function(data) {console.log("getJSON to CartoDB SQL API result/callback function");
                                           dataLyr = L.geoJson(data, {
                                           style: style,
                                           onEachFeature: onEachFeature
                                           });
-      // dataLyr.addTo(map);
                               })//.getJson/end of CartoDB SQI API call
       }
   }; 
@@ -430,39 +413,28 @@ function updateMap(parms){
   cartodb_sql_api_req.cdb_data_resp().done(function(data){
     dataLyr.addTo(map);
     console.log(data);
-    // //Output Tabular display ## need style
-    // $('#tbl_results').append('<br />'+data.features.length+' Rows returned<br />');
-    //   $.each(data.features, function(key, val) {         
-    //       console.log(data.features.length);
-    //       // console.log(val);
-    //       $('#tbl_results').append('<br />Query Return Row<br />'); 
-    //         // console.log(key);
-    //         //console.log(val.properties.postal);
-    //         $.each(val.properties, function (k,v){
-    //             // console.log(k);
-    //             // console.log(v);
-    //             $('#tbl_results').append(k+ ':-: '+v+ '<br />');
-    //             });
-    //   }); //each feature
+    //Output Tabular display ## need style
+    $('#tbl_results').append('<p id="return_num"> <br />'+data.features.length+' Rows returned<br />');
+      $.each(data.features, function(key, val) {         
+          $('#tbl_results').append('<br />'); 
+            $.each(val.properties, function (k,v){
+                  if ((k==='postal')|| (v==analytic_dim) || (k===metric) || (v==time_dim)){
+                      $('#tbl_results').append(k+ ':: '+v+ '<br />');
+                  }
+              });
+      }); //each feature
   }); // end of cdb_data_resp() done
-
 } //updateMap
-     
-  
+    
+
 
 
 /*
 *** --- Leaflet helpers --- ***
 * mostly from docs
 */
-
 //http://leafletjs.com/examples/geojson-example.html
 function onEachFeature(feature, layer) {
-    // console.log(feature);
-    // console.log(layer);
-
-    // var popupContent = "<p>I started out as a GeoJSON " +
-    //     feature.geometry.type + ", but now I'm a Leaflet vector!</p>";
     var popupContent="";
     popupContent+='Dimensions ::  ';
     popupContent+='<ul><li>Time: '+ feature.properties.year +'</li>';
@@ -480,12 +452,11 @@ function onEachFeature(feature, layer) {
       popupContent += feature.properties.popupContent;
     }
 
-    layer.bindPopup(popupContent);
+    //$('#tbl_results').append(popupContent).hide();
+   layer.bindPopup(popupContent);
     
 }
-
-    
-
+//Change based on input data & color wheel
 function getColor(d) {
     //console.log(d);
     return d >= 7500 ? '#B10026' :
@@ -496,30 +467,9 @@ function getColor(d) {
            d > 500   ? '#FED976' :
            d >= 100  ? '#FFFFB2' :
                       '#FFFFB2';
-
-           //  d >= 114438 ? '#B10026' :
-           // d > 19428  ? '#E31A1C' :
-           // d > 6645  ? '#FC4E2A' :
-           // d > 2543  ? '#FD8D3C' :
-           // d > 1348   ? '#FD8D3C' :
-           // d > 674   ? '#FEB24C' :
-           // d >= 283   ? '#' :
-           //              '#';
-
-              // #ffffb2
-              // #fed976
-              // #feb24c
-              // #fd8d3c
-              // #fc4e2a
-              // #e31a1c
-              // #b10026
 }
 function style(feature) {
-    // console.log($('#metric').val());
-    // console.log(feature);
     var metric_val = eval("feature.properties."+$('#metric').val());
-    // console.log(metric_val);
-    // console.log(feature.properties.postal);
     return {
         fillColor: getColor(metric_val),
         weight: 0.5,
@@ -529,8 +479,6 @@ function style(feature) {
         fillOpacity: 0.9
     };
 }
-
-
 
 // you could use $(window).load(main);
 window.onload = init;

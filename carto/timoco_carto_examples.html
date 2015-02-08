@@ -14,6 +14,14 @@
         background: transparent;
       }
       /*#proc_results {align}*/
+      #tbl_results{
+        background-color: #F0ECEC;
+        position: absolute;
+        right: 10px;
+        top: 0px;
+        width: 20%;
+        opacity: 0.75;
+      } 
   	</style>
     
     <!--load timoco javascript functions -->
@@ -25,11 +33,12 @@
   <div id="data_filters"></div>
   <div id="metric_selector"></div>
   <button onclick="updateMap()">Update Map</button>
+  <button onclick="$('#tbl_results').toggle()">Show/Hide Data Table</button>
   <button onclick="updateCDBMap()">Update Map [cartodb.SQL]</button>
   <button onclick="loadCDBNamedMap()">Load Named Maps [MAPS API]</button>
-  <!-- <button onclick="get_sim_GeoJSON()">Get Spatial Data</button> -->
   <button onclick="animateMapByYears()">Animate Map</button>
 
+  <!-- <button onclick="get_sim_GeoJSON()">Get Spatial Data</button> -->
   
 
   <div id="tbl_results"></div> 
