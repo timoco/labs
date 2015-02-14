@@ -13,6 +13,8 @@
   
 
   <script type="text/javascript">
+  var map;
+    var dynLyr;
   $(document).ready(function() { 
     
     var retail_health_viz_url = 'http://timoco.cartodb.com/api/v2/viz/88f0c25e-9fa3-11e4-9ab7-0e0c41326911/viz.json';
@@ -20,8 +22,7 @@
     var county_tbl = 'county_usa';
     var user_name = 'timoco';
     var api_key = '2d80f8152e590c2f8d7da82f92f397ffa697bab8';
-    var map;
-
+    
 
   initMap();
 
@@ -45,7 +46,7 @@
    
     console.log(arguments.callee.name);
    
-    cartodb.createLayer(map, {
+    dynLyr = cartodb.createLayer(map, {
       user_name: 'timoco',
       type: 'namedmap',
       named_map: {
@@ -54,6 +55,7 @@
           layer_name: "t",
           interactivity: "cartodb_id, name, pop"
          }]
+
        }
       })
       //map.addLayer(cdbNamedMapLyr);
@@ -69,6 +71,8 @@
         console.log("Event #" + data.cartodb_id + ", name " + data.name + ", max population: " + data.pop_max);
       });
       console.log(layer.getSubLayer(0));
+
+      // dynLyr.setParams()
         
       });
     }
@@ -76,6 +80,11 @@
 });
 
 function animateMap(){
+  console.log(dynLyr);
+  console.log("should be setting the params");
+  // dynLyr.setParams('pop', 100000);
+  // dynLyr.addTo(map);
+  // layer.setParams('test', 10); // sets test = 10
     var mapconfig = {
         "version": "0.0.1",
         "name": "county_ex",
@@ -130,3 +139,4 @@ function animateMap(){
   
 </body>
 </html>
+  
