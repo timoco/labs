@@ -2,19 +2,18 @@
 experiments in cartographic visualization and data analysis
 
 ##CartoDB
-*** Very much in dev ****
+***Very much in dev****
 ###RESOURCES
 <!--*general, possibly helpful community links*
 * [AxHill's SlideDecks](https://speakerdeck.com/andrewxhill)-->
 * [Healthcare - Pharmacy/Retail Analysis](http://timoco.github.io/labs/carto/timoco_carto_examples.html)	
-
-*CartoDB elements:
-    *cartodb.js
-    *SQL API
+* CartoDB elements:
+    * cartodb.js
+    <!--*SQL API
     *MAPS API
 *Other JS elements:
     *Leaflet.js via cartodb.js
-    *jQuery
+    *jQuery-->
 <!--
 ##CDB WORKSHOPS
 *repo for workshop materials from the CartoDB community team*
