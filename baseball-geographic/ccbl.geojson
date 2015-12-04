@@ -5,21 +5,6 @@
 { 
 	"type": "Feature", 
 	"properties": { 
-		"Class": "Majors", 
-		"League": "Major League Baseball", 
-		"Team": "Boston Red Sox", 
-		"Ballpark": "Fenway Park", 
-		"Lat": 42.346202, 
-		"Long": -71.097757 
-		}, 
-	"geometry": { 
-		"type": "Point", 
-		"coordinates": [ -71.097757, 42.346202 ] 
-		} 
-},
-{ 
-	"type": "Feature", 
-	"properties": { 
 		"Class": "Amateur", 
 		"League": "Cape Cod Baseball League", 
 		"Team": "Bourne Braves", 
