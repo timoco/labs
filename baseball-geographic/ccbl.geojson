@@ -1,0 +1,171 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Majors", 
+		"League": "Major League Baseball", 
+		"Team": "Boston Red Sox", 
+		"Ballpark": "Fenway Park", 
+		"Lat": 42.346202, 
+		"Long": -71.097757 
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -71.097757, 42.346202 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Bourne Braves", 
+		"Ballpark": "Doran Park", 
+		"Lat": 41.744200,
+		"Long": -70.577800 
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -70.577800, 41.744200 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Cotuit Kettleers", 
+		"Ballpark": "Lowell Park", 
+		"Lat": 41.625218,
+		"Long": -70.434877 
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -70.434877, 41.625218 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Falmouth Commodores", 
+		"Ballpark": "Guv Fuller Field", 
+		"Lat": 41.555210,
+		"Long": -70.604085 
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -70.604085, 41.555210 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Hyannis Harbor Hawks", 
+		"Ballpark": "McKeon Field", 
+		"Lat": 41.648275,
+		"Long": -70.283475 
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -70.283475, 41.648275 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Wareham Gatemen", 
+		"Ballpark": "Clem Spillane Field", 
+		"Lat": 41.758022,
+		"Long": -70.722160 
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -70.722160, 41.758022 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Brewster Whitecaps", 
+		"Ballpark": "Stony Brook School", 
+		"Lat": 41.758270,
+		"Long": -70.070055 
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -70.070055, 41.758270 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Chatham Anglers", 
+		"Ballpark": "Veteran's Field", 
+		"Lat": 41.684724,
+		"Long": -69.962681
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -69.962681, 41.684724 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Harwich Mariners", 
+		"Ballpark": "Whitehouse Field", 
+		"Lat": 41.692690,
+		"Long": -70.066160
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -70.066160, 41.692690 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Orleans Firebirds", 
+		"Ballpark": "Eldredge Park", 
+		"Lat": 41.782775,
+		"Long": -69.988120
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -69.988120, 41.782775 ] 
+		} 
+},
+{ 
+	"type": "Feature", 
+	"properties": { 
+		"Class": "Amateur", 
+		"League": "Cape Cod Baseball League", 
+		"Team": "Yarmouth-Dennis Red Sox", 
+		"Ballpark": "'Red' Wilson Field", 
+		"Lat": 41.677375,
+		"Long": -70.191855
+		}, 
+	"geometry": { 
+		"type": "Point", 
+		"coordinates": [ -70.191855, 41.677375 ] 
+		} 
+}
+]
+}
