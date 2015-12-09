@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TPM -- Simple Leaflet GeoJSON Example</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+</head>
+<body>
+	<div id="map" style="width: 1200px; height: 600px"></div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<script>
+		// var tileUrl='http://www.openstreetmap.org/#map=7/41.857/-72.471';
+		var map = L.map('map', {center:[41.857, -72.471], zoom: 7});
+		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap'}).addTo(map);
+
+		$.getJSON('ccbl.geojson', function(data){
+			L.geoJson(data, {
+				onEachFeature: function(feature, layer) {
+					console.log(feature);
+					layer.bindPopup(feature.properties.Team);
+				}
+			}).addTo(map);
+		});
+	</script>
+</body>
+</html>
