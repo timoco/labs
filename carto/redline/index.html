@@ -1,0 +1,119 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html id="html" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Redline</title>
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+    <!-- Google Maps V3 Javascript API -->
+	<!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD9_u4u0SE73VRatVAwxPqB6sJvzfrmQrE&sensor=false"></script>-->
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    	
+    <script type="text/javascript" src="js/map.js"></script>
+  </head>
+  <body id="body" onload="initialize()">
+    <br />
+    <!-- TPM additions -->
+   <div id="controls">
+		<input id="address" type="textbox" value="Charlotte, NC" size="50">
+    	<input type="button" value="Go To Address" onclick="zoomToAddr()">
+		<br /><br />
+	</div>
+        <div id="map_legend">
+    	<table id="legend">
+    		<tr><th align="center" colspan="3">LEGEND</th></tr>
+    		<tr>
+    			<td colspan="3">
+    				<table id="sublegend">
+    					<tr><td>Parcels</td></tr>
+    					
+    					<tr><td>
+    					<!-- <input type="checkbox" onclick="toggleLyr(this)" value="on" name="sad" checked="checked"/> -->
+    					<input type="radio" name="parcel" value="sad" onclick="toggleLyr(this)" checked="checked" /> 
+    					</td>
+    						<td colspan="2">Special Assessment Districts</td>
+			    		</tr>
+			    		<tr>
+			    			<td>&nbsp;</td>
+			    			<td id="sadmb"> &nbsp;</td>
+			    			<td>Maybe</td>
+			    		</tr>
+			    		<tr>
+			    			<td>&nbsp;</td>
+			    			<td id="sadn"> &nbsp;</td>
+			    			<td>No</td>
+			    		</tr>
+			    		<tr>
+			    			<td>&nbsp;</td>
+			    			<td id="sady"> &nbsp;</td>
+			    			<td>Yes</td>
+			    		</tr>
+			    		<tr>
+			    			<td>
+			    			<input type="radio" name="parcel" value="dev" onclick="toggleLyr(this)" />
+			    			<!-- <br /><input type="checkbox" onclick="toggleLyr(this)" value="on" name="parcels" checked="checked"/>-->
+			    			</td>
+			    			
+			    			<td colspan="2">Development Type</td>
+			    		</tr>
+			    		<tr>
+			    			<td>&nbsp;</td>
+			    			<td id="tod1"> &nbsp;</td>
+			    			<td>TOD Tier 1</td>
+			    		</tr>
+			    		<tr>
+			    			<td>&nbsp;</td>
+			    			<td id="tod2">&nbsp;</td>
+			    			<td>TOD Tier 2</td>
+			    		</tr>
+			    		<tr>
+			    			<td>&nbsp;</td>
+			    			<td id="fod">&nbsp;</td>
+			    			<td>FOD</td>
+			    		</tr>
+    				</table>
+    			</td>
+    		</tr>
+
+    		<tr>
+    			<td>
+    			<input type="checkbox" onclick="toggleLyr(this)" value="on" name="stationBuf" checked="checked"/></td>
+    			<!-- <td id="stations"></td>-->
+    			<td id="stationsBuf">&#X25C9;</td>
+    			<td>Station w/ 0.5mi Buffer</td>
+    		</tr>
+    		<tr>
+    			<td><input type="checkbox" onclick="toggleLyr(this)" value="on" name="ubd" checked="checked"/></td>
+    			<td id="ubd"></td>
+    			<td>UBD/TIF</td>
+    		</tr>
+    		<tr>
+    			<td><input type="checkbox" onclick="toggleLyr(this)" value="on" name="redline" checked="checked"/></td>
+    			<td><hr  id="legend_redline"/></td>
+    			<!-- <td id="redline">&nbsp;</td>-->
+    			<td>Red Line</td>
+    		</tr>
+    		<!-- 
+    		<tr>
+    			<td><input type="checkbox" onclick="toggleLyr(this)" value="on" name="stationBuf" checked="checked"/></td>
+    			<td id="stationsBuf">&#X25C9;</td>
+    			<td>Station Buffer (0.5mi)</td>
+    		</tr>
+    		 -->
+    		<!--
+    			TOD & TOD tier 1 = FFBEBE
+TOD tier 2 = CA7AF5
+FOD = F5F57A
+Station Buffer = 9EAAD7
+Redline = FA3411
+Stations = 000000
+    		-->
+    	</table>
+    	
+    </div>
+
+    <div id="map"></div>
+
+  </body>
+</html>		

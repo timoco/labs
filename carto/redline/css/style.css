@@ -1,0 +1,143 @@
+/*--------------------------------------
+  Author:      Timothy Morrissey & Tyler Waring
+  Created:     Feb 2012
+  Description: Stylesheet for Redline Project
+----------------------------------------*/
+
+#html { 
+	height: 100% 
+}
+#body { 
+	height: 100%; 
+	margin: 0px; 
+	padding: 0px 
+}
+
+#map {
+  /*width: 100%;*/
+  width: 73%;
+  height: 100%;
+  border: 1px solid #000;
+  float: left;
+}
+
+#map_legend{
+	width:25%;
+	float: right;
+	font:oblique 15px helvetica,sans-serif;
+	/*
+		height:100%;
+	border: 1px solid #6699CC;
+	font:15px arial,sans-serif;
+	padding-top:25px;
+	padding-bottom:25px;
+	padding-right:50px;	
+	padding-left:50px
+	*/
+}
+table#legend{
+	border: 1px solid black;
+}
+table#sublegend{
+	padding:0px 10px 10px 10px;
+	/*border: 1px solid blue;*/
+	background-color: #F5F5F5
+}
+
+th{
+	font:bold 20px helvetica,sans-serif;
+	background-color:#C0C0C0;
+	color:black;
+	padding: 3px 0px 3px 0px
+	}
+
+	
+td#stations{
+	/*background-color: #000000;
+	width: 20px
+	*/
+	background: #000000;
+    width: 1px;
+    height: 1px;
+    border-radius: 100%;
+}
+td#stationsBuf{
+	border:2px solid #002673;
+	text-align: center;
+	/*background: #9EAAD7;*/
+    width: 1px;
+    height: 1px;
+    border-radius: 100%;
+	/*background-color: ;
+	outline-color: #9EAAD7;
+	width: 20px>*/
+}
+#legend_redline{
+	background-color:#FA3411;
+	color: #FA3411;
+	height: 5px;
+	border: 0
+		
+}
+
+td#redline{
+	padding-top:10px;
+	border-bottom:2px solid #FA3411;
+	
+
+}
+td#fod{
+	background: #F5F57A;
+    width: 10px;
+    height: 1px;
+    border-radius: 10%;
+    border:1px solid #C0C0C0;
+}
+td#tod1{
+	width: 25px;
+    height: 20px;
+    border-radius: 10%;
+	background-color: #FFBEBE;
+	border:1px solid #C0C0C0;
+}td#tod2{
+    width: 25px;
+    height: 20px;
+    border-radius: 10%;
+	background-color: #CA7AF5;
+	border:1px solid #C0C0C0;
+}
+td#sadmb{
+	background: #9B2600;
+    width: 25px;
+    height: 20px;
+    border-radius: 10%
+}
+
+td#sadn{
+	background: #FF0000;
+    width: 25px;
+    height: 20px;
+    border-radius: 10%;
+}
+
+td#sady{
+	background: #4CE600;
+    width: 25px;
+    height: 20px;
+    border-radius: 10%;
+}
+td#ubd{
+	border:2px solid #000000;
+	width: 20px
+}
+/*
+SAD Maybe - 9B2600
+SAD Yes -  4CE600
+SAD No - FF0000
+#TOD tier 1 = FFBEBE
+TOD tier 2 = CA7AF5
+FOD = F5F57A
+Station Buffer = 9EAAD7
+Redline = FA3411
+Stations = 000000
+    		-->*/
