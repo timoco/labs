@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Philadelphia July 4th Matchup Probability Tree</title>
+    <!-- Load D3.js Library -->
+    <script src="https://cloudflare.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 { color: #38bdf8; margin-bottom: 5px; font-size: 24px; }
+        p { color: #94a3b8; margin-top: 0; margin-bottom: 20px; }
+        .node circle {
+            fill: #1e293b;
+            stroke: #38bdf8;
+            stroke-width: 2px;
+            cursor: pointer;
+        }
+        .node text {
+            font-size: 12px;
+            fill: #f8fafc;
+        }
+        .node--leaf text { font-weight: bold; fill: #34d399; }
+        .link {
+            fill: none;
+            stroke: #334155;
+            stroke-width: 1.5px;
+        }
+        .link-active {
+            stroke: #38bdf8;
+            stroke-width: 3px;
+        }
+        .tooltip {
+            position: absolute;
+            padding: 10px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            color: #f8fafc;
+            font-size: 13px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Philadelphia July 4th Round of 16 Tree</h1>
+    <p>Hover over nodes to trace conditional pathways and joint probabilities.</p>
+    
+    <div id="tree-container"></div>
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        // 1. Embedded Bayesian Probability Dataset
+        const treeData = {
+            name: "Philly July 4th",
+            prob: 1.0,
+            children: [
+                {
+                    name: "Match 74: Germany (85%)",
+                    prob: 0.85,
+                    children: [
+                        { name: "vs. France", prob: 0.55, joint: 0.4675 },
+                        { name: "vs. Norway", prob: 0.35, joint: 0.2975 },
+                        { name: "vs. Group I Underdog", prob: 0.10, joint: 0.0850 }
+                    ]
+                },
+                {
+                    name: "Match 74: Group E Underdog (15%)",
+                    prob: 0.15,
+                    children: [
+                        { name: "vs. France", prob: 0.55, joint: 0.0825 },
+                        { name: "vs. Norway", prob: 0.35, joint: 0.0525 },
+                        { name: "vs. Group I Underdog", prob: 0.10, joint: 0.0150 }
+                    ]
+                }
+            ]
+        };
+
+        // 2. Dimensions and Setup
+        const width = 900;
+        const height = 500;
+        const margin = { top: 20, right: 150, bottom: 20, left: 150 };
+
+        const svg = d3.select("#tree-container")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const tooltip = d3.select("#tooltip");
+
+        // 3. D3 Layout Generator
+        const tree = d3.tree().size([height - margin.top - margin.bottom, width - margin.left - margin.right]);
+        const root = d3.hierarchy(treeData);
+        tree(root);
+
+        // 4. Render Links (Edges)
+        const links = svg.selectAll(".link")
+            .data(root.links())
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("d", d3.linkHorizontal()
+                .x(d => d.y)
+                .y(d => d.x)
+            );
+
+        // 5. Render Nodes
+        const nodes = svg.selectAll(".node")
+            .data(root.descendants())
+            .enter().append("g")
+            .attr("class", d => `node ${d.children ? "" : "node--leaf"}`)
+            .attr("transform", d => `translate(${d.y},${d.x})`);
+
+        // Add node interactive circles
+        nodes.append("circle")
+            .attr("r", 6)
+            .on("mouseover", function(event, d) {
+                // Highlight path
+                d3.select(this).style("fill", "#38bdf8");
+                
+                // Construct tooltip text based on tree depth
+                let htmlContent = `<strong>${d.data.name}</strong>`;
+                if (d.depth === 1) {
+                    htmlContent += `<br>Conditional Prob: ${(d.data.prob * 100).toFixed(1)}%`;
+                } else if (d.depth === 2) {
+                    htmlContent += `<br>Matchup Joint Prob: <strong>${(d.data.joint * 100).toFixed(1)}%</strong>`;
+                }
+
+                tooltip.style("opacity", 1)
+                    .html(htmlContent)
+                    .style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY - 15) + "px");
+            })
+            .on("mouseout", function() {
+                d3.select(this).style("fill", "#1e293b");
+                tooltip.style("opacity", 0);
+            });
+
+        // Add text labels
+        nodes.append("text")
+            .attr("dy", ".35em")
+            .attr("x", d => d.children ? -12 : 12)
+            .style("text-anchor", d => d.children ? "end" : "start")
+            .text(d => d.data.name);
+
+    </script>
+</body>
+</html>

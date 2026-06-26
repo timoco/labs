@@ -1,0 +1,313 @@
+<!-- To add interactive paths and country flags, we will embed standard CSS animations and inline SVG vector flags directly into the nodes.
+When you hover over any node, the vector path trace leading back to the root will illuminate in bright blue, highlighting that specific Bayesian sequence.
+Perform a Find and Replace on the text below to swap the placeholders back into working code:
+
+   1. Find < and replace with <
+   2. Find > and replace with > -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scotland World Cup Advancement Probability Tree</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --scotland-blue: #0065bf;
+            --border-color: #30363d;
+            --success-green: #3fb950;
+            --danger-red: #f85149;
+            --warning-gold: #e3b341;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        #tree-container {
+            width: 95vw;
+            max-width: 1250px;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        /* Interactive Path Hover Tracking Styles */
+        .link {
+            fill: none;
+            stroke: #343b44;
+            stroke-width: 3px;
+            transition: stroke 0.25s ease, stroke-width 0.25s ease;
+        }
+
+        .node {
+            cursor: pointer;
+        }
+
+        /* SVG Vector Groups highlight child paths when focused */
+        .branch-group:hover .link {
+            stroke: #444c56;
+            stroke-width: 4px;
+        }
+
+        .node-interactive:hover ~ .link,
+        .node-interactive:hover circle {
+            stroke: var(--scotland-blue);
+            stroke-width: 4px;
+        }
+
+        circle {
+            fill: #21262d;
+            stroke: var(--border-color);
+            stroke-width: 2.5px;
+            transition: all 0.2s ease;
+        }
+
+        .node:hover circle {
+            fill: #30363d;
+            stroke: #fff;
+            transform: scale(1.2);
+        }
+
+        .node-root circle {
+            fill: var(--scotland-blue);
+            stroke: #fff;
+            stroke-width: 3px;
+        }
+
+        text {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            pointer-events: none;
+        }
+
+        .node-title {
+            font-weight: bold;
+            fill: #ffffff;
+            font-size: 12px;
+        }
+
+        .node-time {
+            fill: var(--text-muted);
+            font-size: 10px;
+            font-style: italic;
+        }
+
+        .node-prob {
+            font-weight: 900;
+            font-size: 14px;
+            font-family: monospace, sans-serif;
+        }
+
+        .prob-up { fill: var(--success-green); }
+        .prob-down { fill: var(--danger-red); }
+        .prob-stable { fill: var(--warning-gold); }
+
+        /* Flag Positioning Rules */
+        .flag-icon {
+            shape-rendering: crispEdges;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland Interactive Bayesian Survival Tree</h1>
+        <p>Hover over nodes to isolate specific outcome pathways. Real-time country data and flag alignments render without script runtimes.</p>
+    </header>
+
+    <div id="tree-container">
+        <svg viewBox="0 0 1150 560">
+            <g transform="translate(140, 20)">
+                
+                <!-- BACKGROUND PATH BASE LINES -->
+                <path id="p1" class="link" d="M 0 260 C 120 260, 120 120, 240 120"></path>
+                <path id="p2" class="link" d="M 0 260 C 120 260, 120 400, 240 400"></path>
+                
+                <path id="p3" class="link" d="M 240 120 C 360 120, 360 60, 480 60"></path>
+                <path id="p4" class="link" d="M 240 120 C 360 120, 360 180, 480 180"></path>
+                
+                <path id="p5" class="link" d="M 240 400 C 360 400, 360 340, 480 340"></path>
+                <path id="p6" class="link" d="M 240 400 C 360 400, 360 460, 480 460"></path>
+
+                <path id="p7" class="link" d="M 480 60 C 600 60, 600 30, 720 30"></path>
+                <path id="p8" class="link" d="M 480 60 C 600 60, 600 90, 720 90"></path>
+
+                <path id="p9" class="link" d="M 480 180 C 600 180, 600 150, 720 150"></path>
+                <path id="p10" class="link" d="M 480 180 C 600 180, 600 210, 720 210"></path>
+
+                <path id="p11" class="link" d="M 480 340 C 600 340, 600 310, 720 310"></path>
+                <path id="p12" class="link" d="M 480 340 C 600 340, 600 370, 720 370"></path>
+
+                <path id="p13" class="link" d="M 480 460 C 600 460, 600 430, 720 430"></path>
+                <path id="p14" class="link" d="M 480 460 C 600 460, 600 490, 720 490"></path>
+
+                <!-- ROOT NODE (SCOTLAND) -->
+                <g class="node node-root" transform="translate(0, 260)">
+                    <circle r="12"></circle>
+                    <!-- Embedded Vector Scotland Flag -->
+                    <g transform="translate(-45, -37)" class="flag-icon">
+                        <rect width="24" height="16" fill="#0065bf" r="2"></rect>
+                        <path d="M0 0 L24 16 M0 16 L24 0" stroke="#ffffff" stroke-width="3"></path>
+                    </g>
+                    <text class="node-title" dy="-16" x="-14" text-anchor="end">SCOTLAND (Prior)</text>
+                    <text class="node-time" dy="-4" x="-14" text-anchor="end">Baseline Bubble</text>
+                    <text class="node-prob prob-stable" dy="12" x="-14" text-anchor="end">44%</text>
+                </g>
+
+                <!-- LEVEL 1: 4:00 PM RESULTS (GERMANY / IVORY COAST / ECUADOR) -->
+                <g class="node" transform="translate(240, 120)" onmouseover="document.getElementById('p1').style.stroke='#0065bf';document.getElementById('p1').style.strokeWidth='5px';" onmouseout="document.getElementById('p1').style.stroke='#444c56';document.getElementById('p1').style.strokeWidth='2.5px';">
+                    <circle r="9"></circle>
+                    <!-- Germany Flag -->
+                    <g transform="translate(14, -32)" class="flag-icon">
+                        <rect width="21" height="14" fill="#000"></rect>
+                        <rect width="21" height="9.3" y="4.6" fill="#dd0000"></rect>
+                        <rect width="21" height="4.6" y="9.3" fill="#ffce00"></rect>
+                    </g>
+                    <text class="node-title" dy="-16" x="42" text-anchor="start">Favorites Win/Draw</text>
+                    <text class="node-time" dy="-4" x="14" text-anchor="start">4:00 PM - Group E (GER/CIV)</text>
+                    <text class="node-prob prob-up" dy="12" x="14" text-anchor="start">58%</text>
+                </g>
+
+                <g class="node" transform="translate(240, 400)" onmouseover="document.getElementById('p2').style.stroke='#f85149';document.getElementById('p2').style.strokeWidth='5px';" onmouseout="document.getElementById('p2').style.stroke='#444c56';document.getElementById('p2').style.strokeWidth='2.5px';">
+                    <circle r="9"></circle>
+                    <!-- Ecuador Flag Base Colors -->
+                    <g transform="translate(14, -32)" class="flag-icon">
+                        <rect width="21" height="7" fill="#ffdd00"></rect>
+                        <rect width="21" height="3.5" y="7" fill="#0033a0"></rect>
+                        <rect width="21" height="3.5" y="10.5" fill="#ce1126"></rect>
+                    </g>
+                    <text class="node-title" dy="-16" x="42" text-anchor="start">Any Underdog Upset</text>
+                    <text class="node-time" dy="-4" x="14" text-anchor="start">4:00 PM - Group E (ECU/CUW)</text>
+                    <text class="node-prob prob-down" dy="12" x="14" text-anchor="start">15%</text>
+                </g>
+
+                <!-- LEVEL 2: 7:00 PM RESULTS (JAPAN / SWEDEN) -->
+                <g class="node" transform="translate(480, 60)" onmouseover="document.getElementById('p3').style.stroke='#0065bf';document.getElementById('p1').style.stroke='#0065bf';" onmouseout="document.getElementById('p3').style.stroke='#444c56';document.getElementById('p1').style.stroke='#444c56';">
+                    <circle r="8"></circle>
+                    <!-- Sweden Flag -->
+                    <g transform="translate(14, -32)" class="flag-icon">
+                        <rect width="21" height="14" fill="#006aa7"></rect>
+
+<path d="M6 0 L6 14 M0 8 L21 8" stroke="#fecc02" stroke-width="3"></path>
+</g>
+<text class="node-title" dy="-16" x="42" text-anchor="start">Normal Result</text>
+<text class="node-time" dy="-4" x="14" text-anchor="start">7:00 PM - Group F (SWE)</text>
+<text class="node-prob prob-stable" dy="12" x="14" text-anchor="start">55%</text>
+</g>
+<g class="node" transform="translate(480, 180)" onmouseover="document.getElementById('p4').style.stroke='#3fb950';document.getElementById('p1').style.stroke='#0065bf';" onmouseout="document.getElementById('p4').style.stroke='#444c56';document.getElementById('p1').style.stroke='#444c56';">
+<circle r="8"></circle>
+<g transform="translate(14, -32)" class="flag-icon">
+<rect width="21" height="14" fill="#ffffff" stroke="#ccc" stroke-width="0.5"></rect>
+<circle cx="10.5" cy="7" r="4" fill="#bc002d"></circle>
+</g>
+<text class="node-title" dy="-16" x="42" text-anchor="start">Japan Blowout (4+)</text>
+<text class="node-time" dy="-4" x="14" text-anchor="start">7:00 PM - Group F (JPN)</text>
+<text class="node-prob prob-up" dy="12" x="14" text-anchor="start">85%</text>
+</g>
+<g class="node" transform="translate(480, 340)" onmouseover="document.getElementById('p5').style.stroke='#f85149';document.getElementById('p2').style.stroke='#f85149';" onmouseout="document.getElementById('p5').style.stroke='#444c56';document.getElementById('p2').style.stroke='#444c56';">
+<circle r="8"></circle>
+<g transform="translate(14, -32)" class="flag-icon">
+<rect width="21" height="14" fill="#006aa7"></rect>
+<path d="M6 0 L6 14 M0 8 L21 8" stroke="#fecc02" stroke-width="3"></path>
+</g>
+<text class="node-title" dy="-16" x="42" text-anchor="start">Normal Result</text>
+<text class="node-time" dy="-4" x="14" text-anchor="start">7:00 PM - Group F (SWE)</text>
+<text class="node-prob prob-down" dy="12" x="14" text-anchor="start">12%</text>
+</g>
+<g class="node" transform="translate(480, 460)" onmouseover="document.getElementById('p6').style.stroke='#3fb950';document.getElementById('p2').style.stroke='#f85149';" onmouseout="document.getElementById('p6').style.stroke='#444c56';document.getElementById('p2').style.stroke='#444c56';">
+<circle r="8"></circle>
+<g transform="translate(14, -32)" class="flag-icon">
+<rect width="21" height="14" fill="#ffffff" stroke="#ccc" stroke-width="0.5"></rect>
+<circle cx="10.5" cy="7" r="4" fill="#bc002d"></circle>
+</g>
+<text class="node-title" dy="-16" x="42" text-anchor="start">Japan Blowout (4+)</text>
+<text class="node-time" dy="-4" x="14" text-anchor="start">7:00 PM - Group F (JPN)</text>
+<text class="node-prob prob-up" dy="12" x="14" text-anchor="start">38%</text>
+</g>
+<g class="node" transform="translate(720, 30)" onmouseover="document.getElementById('p7').style.stroke='#3fb950';document.getElementById('p3').style.stroke='#0065bf';document.getElementById('p1').style.stroke='#0065bf';" onmouseout="document.getElementById('p7').style.stroke='#444c56';document.getElementById('p3').style.stroke='#444c56';document.getElementById('p1').style.stroke='#444c56';">
+<circle r="6"></circle>
+<text class="node-title" dy="-5" x="12" text-anchor="start">🇦🇺 AUS Win +2 Goals <tspan class="node-prob prob-up" dx="5">70%</tspan></text>
+<text class="node-time" dy="7" x="12" text-anchor="start">10:00 PM - Group D Final Path</text>
+</g>
+<g class="node" transform="translate(720, 90)" onmouseover="document.getElementById('p8').style.stroke='#f85149';document.getElementById('p3').style.stroke='#0065bf';document.getElementById('p1').style.stroke='#0065bf';" onmouseout="document.getElementById('p8').style.stroke='#444c56';document.getElementById('p3').style.stroke='#444c56';document.getElementById('p1').style.stroke='#444c56';">
+<circle r="6"></circle>
+<text class="node-title" dy="-5" x="12" text-anchor="start">🇵🇾 Draw / PAR Win <tspan class="node-prob prob-down" dx="5">35%</tspan></text>
+<text class="node-time" dy="7" x="12" text-anchor="start">10:00 PM - Group D Final Path</text>
+</g>
+<g class="node" transform="translate(720, 150)" onmouseover="document.getElementById('p9').style.stroke='#3fb950';document.getElementById('p4').style.stroke='#3fb950';document.getElementById('p1').style.stroke='#0065bf';" onmouseout="document.getElementById('p9').style.stroke='#444c56';document.getElementById('p4').style.stroke='#444c56';document.getElementById('p1').style.stroke='#444c56';">
+<circle r="6"></circle>
+<text class="node-title" dy="-5" x="12" text-anchor="start">🇦🇺 AUS Win +2 Goals <tspan class="node-prob prob-up" dx="5">95%</tspan></text>
+<text class="node-time" dy="7" x="12" text-anchor="start">10:00 PM - Group D Final Path</text>
+</g>
+<g class="node" transform="translate(720, 210)" onmouseover="document.getElementById('p10').style.stroke='#f85149';document.getElementById('p4').style.stroke='#3fb950';document.getElementById('p1').style.stroke='#0065bf';" onmouseout="document.getElementById('p10').style.stroke='#444c56';document.getElementById('p4').style.stroke='#444c56';document.getElementById('p1').style.stroke='#444c56';">
+<circle r="6"></circle>
+<text class="node-title" dy="-5" x="12" text-anchor="start">🇵🇾 Draw / PAR Win <tspan class="node-prob prob-down" dx="5">72%</tspan></text>
+<text class="node-time" dy="7" x="12" text-anchor="start">10:00 PM - Group D Final Path</text>
+</g>
+<g class="node" transform="translate(720, 310)" onmouseover="document.getElementById('p11').style.stroke='#3fb950';document.getElementById('p5').style.stroke='#f85149';document.getElementById('p2').style.stroke='#f85149';" onmouseout="document.getElementById('p11').style.stroke='#444c56';document.getElementById('p5').style.stroke='#444c56';document.getElementById('p2').style.stroke='#444c56';">
+<circle r="6"></circle>
+<text class="node-title" dy="-5" x="12" text-anchor="start">🇦🇺 AUS Win +2 Goals <tspan class="node-prob prob-up" dx="5">30%</tspan></text>
+<text class="node-time" dy="7" x="12" text-anchor="start">10:00 PM - Group D Final Path</text>
+</g>
+<g class="node" transform="translate(720, 370)" onmouseover="document.getElementById('p12').style.stroke='#f85149';document.getElementById('p5').style.stroke='#f85149';document.getElementById('p2').style.stroke='#f85149';" onmouseout="document.getElementById('p12').style.stroke='#444c56';document.getElementById('p5').style.stroke='#444c56';document.getElementById('p2').style.stroke='#444c56';">
+<circle r="6"></circle>
+<text class="node-title" dy="-5" x="12" text-anchor="start">🇵🇾 Draw / PAR Win <tspan class="node-prob prob-down" dx="5">5%</tspan></text>
+<text class="node-time" dy="7" x="12" text-anchor="start">10:00 PM - Group D Final Path</text>
+</g>
+<g class="node" transform="translate(720, 430)" onmouseover="document.getElementById('p13').style.stroke='#3fb950';document.getElementById('p6').style.stroke='#3fb950';document.getElementById('p2').style.stroke='#f85149';" onmouseout="document.getElementById('p13').style.stroke='#444c56';document.getElementById('p6').style.stroke='#444c56';document.getElementById('p2').style.stroke='#444c56';">
+<circle r="6"></circle>
+<text class="node-title" dy="-5" x="12" text-anchor="start">🇦🇺 AUS Win +2 Goals <tspan class="node-prob prob-up" dx="5">60%</tspan></text>
+<text class="node-time" dy="7" x="12" text-anchor="start">10:00 PM - Group D Final Path</text>
+</g>
+<g class="node" transform="translate(720, 490)" onmouseover="document.getElementById('p14').style.stroke='#f85149';document.getElementById('p6').style.stroke='#3fb950';document.getElementById('p2').style.stroke='#f85149';" onmouseout="document.getElementById('p14').style.stroke='#444c56';document.getElementById('p6').style.stroke='#444c56';document.getElementById('p2').style.stroke='#444c56';">
+<circle r="6"></circle>
+<text class="node-title" dy="-5" x="12" text-anchor="start">🇵🇾 Draw / PAR Win <tspan class="node-prob prob-down" dx="5">18%</tspan></text>
+<text class="node-time" dy="7" x="12" text-anchor="start">10:00 PM - Group D Final Path</text>
+</g>
+</g>
+</svg>
+</div>
+</body>
+</html>
+
